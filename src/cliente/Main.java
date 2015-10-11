@@ -37,108 +37,113 @@ public class Main {
             InputStreamReader in=new InputStreamReader(System.in);
             BufferedReader br=new BufferedReader(in);
             
-            System.out.println("Ingrese opcion (add - remove - modify - auth - listusr - listauth)");
+            System.out.println("Ingrese opcion (add - remove - modify - auth - listusr - listauth - exit)");
             String a=br.readLine();
             String mensaje = "";
+            while (!a.equals("exit")) {                
             
-            if (a.equals("add")){
-                System.out.println("Ingrese usuario");
-                String username = br.readLine();
-                System.out.println("Ingrese contraseña");
-                String pass = br.readLine();
-                System.out.println("Ingrese contraseña administrador");
-                String admpass = br.readLine();
+                if (a.equals("add")){
+                    System.out.println("Ingrese usuario");
+                    String username = br.readLine();
+                    System.out.println("Ingrese contraseña");
+                    String pass = br.readLine();
+                    System.out.println("Ingrese contraseña administrador");
+                    String admpass = br.readLine();
 
-                mensaje = String.format("<MESSAGE TYPE='ADD'><USERNAME>%s</USERNAME>"
-                        + "<PASSWORD>%s</PASSWORD><ADM-PASS>%s</ADM-PASS></MESSAGE>",username,pass,admpass);
-            }
-            if (a.equals("remove")){
-                System.out.println("Ingrese usuario");
-                String username = br.readLine();
-                System.out.println("Ingrese contraseña administrador");
-                String admpass = br.readLine();
+                    mensaje = String.format("<MESSAGE TYPE='ADD'><USERNAME>%s</USERNAME>"
+                            + "<PASSWORD>%s</PASSWORD><ADM-PASS>%s</ADM-PASS></MESSAGE>",username,pass,admpass);
+                }
+                if (a.equals("remove")){
+                    System.out.println("Ingrese usuario");
+                    String username = br.readLine();
+                    System.out.println("Ingrese contraseña administrador");
+                    String admpass = br.readLine();
 
-                mensaje = String.format("<MESSAGE TYPE='REMOVE'><USERNAME>%s</USERNAME>"
-                        + "<ADM-PASS>%s</ADM-PASS></MESSAGE>",username,admpass);
-            }
-            if (a.equals("modify")){
-                System.out.println("Ingrese usuario");
-                String username = br.readLine();
-                System.out.println("Ingrese contraseña");
-                String pass = br.readLine();
-                System.out.println("Ingrese nueva contraseña");
-                String newpass = br.readLine();
+                    mensaje = String.format("<MESSAGE TYPE='REMOVE'><USERNAME>%s</USERNAME>"
+                            + "<ADM-PASS>%s</ADM-PASS></MESSAGE>",username,admpass);
+                }
+                if (a.equals("modify")){
+                    System.out.println("Ingrese usuario");
+                    String username = br.readLine();
+                    System.out.println("Ingrese contraseña");
+                    String pass = br.readLine();
+                    System.out.println("Ingrese nueva contraseña");
+                    String newpass = br.readLine();
 
-                mensaje = String.format("<MESSAGE TYPE='MODIFY'><USERNAME>%s</USERNAME><PASSWORD>%s</PASSWORD>"
-                        + "<NEW-PASS>%s</NEW-PASS></MESSAGE>",username,pass,newpass);
-            }
-            if (a.equals("auth")){
-                System.out.println("Ingrese usuario");
-                String username = br.readLine();
-                System.out.println("Ingrese contraseña");
-                String pass = br.readLine();                
-                    
-                mensaje = String.format("<MESSAGE TYPE='AUTHENTICATE'><USERNAME>%s</USERNAME>"
-                        + "<PASSWORD>%s</PASSWORD></MESSAGE>",username,pass);
-            }
-            if (a.equals("listusr")){
-                System.out.println("Ingrese contraseña administrador");
-                String admpass = br.readLine();
-                
-                mensaje = String.format("<MESSAGE TYPE='LIST-USERS'><ADM-PASS>%s</ADM-PASS></MESSAGE>",admpass);
-            }
-            
-            if (a.equals("listauth")){
-                System.out.println("Ingrese usuario");
-                String username = br.readLine();
-                System.out.println("Ingrese contraseña administrador");
-                String admpass = br.readLine();
-                
-                mensaje = String.format("<MESSAGE TYPE='LIST-AUT'><USERNAME>%s</USERNAME>"
-                        + "<ADM-PASS>%s</ADM-PASS></MESSAGE>",username,admpass);
-            }
-            for (int i = 0; i < 50; i++) {
-             
-                System.out.println(mensaje);
-                Socket socket = new Socket("192.168.0.101",8080);
-                PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
-                out.println(mensaje);
-                
-                //Avisa al socket que finalizo el envio
-                socket.shutdownOutput();
-                
-                BufferedReader inn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                System.out.println(inn.readLine());
-                
-                /*
-                DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-                DocumentBuilder builder = factory.newDocumentBuilder();
-                StringReader sr = new StringReader(inn.readLine());
-                InputSource is = new InputSource(sr);
-                Document document = builder.parse(is);
-                XPath xPath = XPathFactory.newInstance().newXPath();
-                String tipo = null;
-                try {
-                    tipo = document.getDocumentElement().getAttributes().getNamedItem("STATUS").getNodeValue();
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    mensaje = String.format("<MESSAGE TYPE='MODIFY'><USERNAME>%s</USERNAME><PASSWORD>%s</PASSWORD>"
+                            + "<NEW-PASS>%s</NEW-PASS></MESSAGE>",username,pass,newpass);
                 }
-                
-                if (tipo.equals("OK")){
-                    System.out.println("Proceso realizado con exito");
+                if (a.equals("auth")){
+                    System.out.println("Ingrese usuario");
+                    String username = br.readLine();
+                    System.out.println("Ingrese contraseña");
+                    String pass = br.readLine();                
+
+                    mensaje = String.format("<MESSAGE TYPE='AUTHENTICATE'><USERNAME>%s</USERNAME>"
+                            + "<PASSWORD>%s</PASSWORD></MESSAGE>",username,pass);
                 }
-                if(tipo.equals("ERROR")){
-                    String admpass = (String)xPath.evaluate("//ACK[@STATUS='ERROR']/DESC/text()",
-                    document.getDocumentElement(),
-                    XPathConstants.STRING);
-                    System.out.println("Error");
+                if (a.equals("listusr")){
+                    System.out.println("Ingrese contraseña administrador");
+                    String admpass = br.readLine();
+
+                    mensaje = String.format("<MESSAGE TYPE='LIST-USERS'><ADM-PASS>%s</ADM-PASS></MESSAGE>",admpass);
                 }
-            
-                
-                System.out.println("TIPO: "+ tipo);
-                */
-            
-                socket.close();
+
+                if (a.equals("listauth")){
+                    System.out.println("Ingrese usuario");
+                    String username = br.readLine();
+                    System.out.println("Ingrese contraseña administrador");
+                    String admpass = br.readLine();
+
+                    mensaje = String.format("<MESSAGE TYPE='LIST-AUT'><USERNAME>%s</USERNAME>"
+                            + "<ADM-PASS>%s</ADM-PASS></MESSAGE>",username,admpass);
+                }
+                for (int i = 0; i < 1; i++) {
+
+                    System.out.println(mensaje);
+                    Socket socket = new Socket("localhost",8080);
+                    PrintWriter out = new PrintWriter(socket.getOutputStream(),true);
+                    out.println(mensaje);
+
+                    //Avisa al socket que finalizo el envio
+                    socket.shutdownOutput();
+
+                    BufferedReader inn = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                    System.out.println(inn.readLine());
+
+                    /*
+                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder builder = factory.newDocumentBuilder();
+                    StringReader sr = new StringReader(inn.readLine());
+                    InputSource is = new InputSource(sr);
+                    Document document = builder.parse(is);
+                    XPath xPath = XPathFactory.newInstance().newXPath();
+                    String tipo = null;
+                    try {
+                        tipo = document.getDocumentElement().getAttributes().getNamedItem("STATUS").getNodeValue();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                    if (tipo.equals("OK")){
+                        System.out.println("Proceso realizado con exito");
+                    }
+                    if(tipo.equals("ERROR")){
+                        String admpass = (String)xPath.evaluate("//ACK[@STATUS='ERROR']/DESC/text()",
+                        document.getDocumentElement(),
+                        XPathConstants.STRING);
+                        System.out.println("Error");
+                    }
+
+
+                    System.out.println("TIPO: "+ tipo);
+                    */
+
+                    socket.close();
+                }
+                System.out.println("Ingrese opcion (add - remove - modify - auth - listusr - listauth - exit)");
+                a=br.readLine();
+                mensaje = "";
             }
         }
         catch(Exception e){}
